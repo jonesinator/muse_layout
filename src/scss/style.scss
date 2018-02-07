@@ -1,5 +1,16 @@
-$bg-color: blue;
+.navbar-custom {
+    background-color: #2e2926;
+    text-transform: uppercase;
+}
 
-body {
-    background: $bg-color;
+.navbar-custom .navbar-brand,
+.navbar-custom .navbar-text,
+.navbar-custom .navbar-toggler,
+.navbar-custom .navbar-nav .nav-link {
+    color: #ffd000;
+}
+
+.navbar-custom .nav-item.active .nav-link,
+.navbar-custom .nav-item:hover .nav-link {
+    color: #ffe880;
 }
