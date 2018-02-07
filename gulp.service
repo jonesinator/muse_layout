@@ -1,0 +1,16 @@
+[Unit]
+Description=Gulp Server
+
+[Service]
+ExecStart=/var/www/html/node_modules/gulp/bin/gulp.js
+WorkingDirectory=/var/www/html
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=gulp
+User=vagrant
+Group=vagrant
+
+[Install]
+WantedBy=multi-user.target

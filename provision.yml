@@ -1,0 +1,90 @@
+---
+
+- name: Bootstrap Testing Environment
+  hosts: all
+  tasks:
+
+    - name: Determine whether or not the https transport for apt is installed.
+      stat:
+        path: /usr/lib/apt/methods/https
+      register: apt_https_transport
+
+    - name: Install the https transport for apt if needed.
+      become: yes
+      apt:
+        pkg: apt-transport-https
+        state: installed
+      when: not apt_https_transport.stat.exists
+
+    - name: Add apt key for Node.
+      become: yes
+      apt_key:
+        url: https://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x1655A0AB68576280
+        id: "68576280"
+        state: present
+
+    - name: Add Debian repositories for Node.
+      become: yes
+      apt_repository:
+        repo: "{{ item }}"
+        state: present
+      with_items:
+        - "deb https://deb.nodesource.com/node_9.x {{ ansible_distribution_release }} main"
+        - "deb-src https://deb.nodesource.com/node_9.x {{ ansible_distribution_release }} main"
+      register: node_repo
+
+    - name: Get Debian up-to-date.
+      become: yes
+      apt:
+        upgrade: dist
+        update_cache: true
+
+    - name: Install Debian packages.
+      become: yes
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - acl
+        - apache2
+        - nodejs
+
+    - name: Allow Vagrant user full access to /var/www/html.
+      become: yes
+      acl:
+        path: /var/www/html
+        entity: vagrant
+        etype: user
+        permissions: rwx
+        state: present
+
+    - name: Copy files to /var/www/html.
+      copy:
+        src: "{{ item }}"
+        dest: "/var/www/html/{{ item }}"
+      with_items:
+        - package.json
+        - gulpfile.js
+
+    - name: Install Node packages.
+      npm:
+        path: /var/www/html
+
+    - name: Link /var/www/html/src to /vagrant/src so files can be edited outside the VM.
+      file:
+        src: /vagrant/src
+        dest: /var/www/html/src
+        state: link
+
+    - name: Copy Gulp systemd service file.
+      become: yes
+      copy:
+        src: gulp.service
+        dest: /lib/systemd/system/gulp.service
+
+    - name: Enable and start the Gulp systemd service.
+      become: yes
+      systemd:
+        name: gulp
+        enabled: yes
+        state: started
