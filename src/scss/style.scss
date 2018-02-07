@@ -1,16 +1,47 @@
 .navbar-custom {
-    background-color: #2e2926;
-    text-transform: uppercase;
+  background-color: #2e2926;
+  text-transform: uppercase;
 }
 
 .navbar-custom .navbar-brand,
 .navbar-custom .navbar-text,
 .navbar-custom .navbar-toggler,
 .navbar-custom .navbar-nav .nav-link {
-    color: #ffd000;
+  color: #ffd000;
+  line-height: 0;
+  padding-bottom: 0;
+}
+
+.navbar-custom .navbar-nav .nav-link {
+  text-align: center;
+}
+
+.navbar-custom .navbar-nav .nav-link .fa-search {
+  margin-top: -0.35em;
+}
+
+.navbar-custom .navbar-nav .nav-link .fa-caret-up {
+  font-size: 200%;
 }
 
 .navbar-custom .nav-item.active .nav-link,
 .navbar-custom .nav-item:hover .nav-link {
-    color: #ffe880;
+  color: #ffe880;
+}
+
+.nav-item {
+  text-align: right;
+}
+
+.post-author {
+  text-transform: uppercase;
+}
+
+.post-date {
+  text-transform: uppercase;
+  color: #afafaf;
+}
+
+.caret-invisible {
+  visibility: hidden;
 }
